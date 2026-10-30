@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "AI Digivice",
+    "slug": "ai-digivice",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Digi uses your location to notice where you go together."
+      }
+    },
+    "plugins": [
+      "expo-status-bar",
+      "expo-location"
+    ]
+  }
+}
