@@ -136,21 +136,38 @@ def _get_client() -> AsyncOpenAI:
     return _client
 
 
-async def call_llm(messages: list[dict[str, str]], max_tokens: int = 120, temperature: float = 0.9) -> str:
-    """messages = [{"role": "system"|"user"|"assistant", "content": str}, ...]"""
+
+async def call_llm(
+    messages: list[dict[str, str]],
+    max_tokens: int = 1000,
+    temperature: float = 0.9
+) -> str:
+    """Call Digi's AI model using Chat Completions."""
     client = _get_client()
     last_exc: Exception | None = None
+
     for attempt in range(LLM_RETRIES + 1):
         try:
             r = await client.chat.completions.create(
-                model=MODEL, messages=messages, max_tokens=max_tokens, temperature=temperature
+                model=MODEL,
+                messages=messages,
+                max_completion_tokens=max_tokens
             )
+
+            log.info("Digi AI response model: %s", r.model)
+
             return (r.choices[0].message.content or "").strip()
+
         except (APITimeoutError, RateLimitError, APIConnectionError) as e:
             last_exc = e
+
             if attempt < LLM_RETRIES:
-                log.warning("LLM call failed (%s), retrying…", type(e).__name__)
+                log.warning(
+                    "LLM call failed (%s), retrying...",
+                    type(e).__name__
+                )
                 await asyncio.sleep(0.5 * (attempt + 1))
+
     assert last_exc is not None
     raise last_exc
 
