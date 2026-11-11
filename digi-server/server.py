@@ -55,6 +55,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Literal
 
+
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -68,7 +69,7 @@ from openai import (
 )
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-load_dotenv()
+load_dotenv(override=True)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("digi")
@@ -78,7 +79,7 @@ log = logging.getLogger("digi")
 # ─────────────────────────────────────────────────────────────────────────────
 MEMORY_FILE = Path(os.getenv("MEMORY_FILE") or Path(__file__).parent / "digi_memory.json")
 MEMORY_CAP = int(os.getenv("MEMORY_CAP", "200"))
-MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+MODEL = os.getenv("OPENAI_MODEL", "gpt-6.1-terra")
 TIMEOUT = float(os.getenv("LLM_TIMEOUT", "20"))
 LLM_RETRIES = int(os.getenv("LLM_RETRIES", "1"))
 CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()]
